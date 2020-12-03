@@ -52,6 +52,7 @@ def set_hparams(
     learning_rate=1e-3,
     input_size=None,
     targets=None,
+    progress_bar_refresh_rate=20,
 ):
     """Creates a dictionary of hyperparameters"""
     # if rand_split_val is None:
@@ -69,6 +70,7 @@ def set_hparams(
     hparams["learning_rate"] = learning_rate
     hparams["input_size"] = input_size
     hparams["targets"] = targets
+    hparams["progress_bar_refresh_rate"] = progress_bar_refresh_rate
     return hparams
 
 
@@ -77,9 +79,9 @@ def train_and_test(
 ):
     model = classifier(hparams)
     if callback is not None:
-        trainer = pl.Trainer(gpus=hparams["gpus"], max_epochs=hparams["max_epochs"], callbacks=[callback])
+        trainer = pl.Trainer(gpus=hparams["gpus"], max_epochs=hparams["max_epochs"], progress_bar_refresh_rate=hparams["progress_bar_refresh_rate"], callbacks=[callback])
     else:
-        trainer = pl.Trainer(gpus=hparams["gpus"], max_epochs=hparams["max_epochs"])
+        trainer = pl.Trainer(gpus=hparams["gpus"], max_epochs=hparams["max_epochs"], progress_bar_refresh_rate=hparams["progress_bar_refresh_rate"])
 
     trainer.fit(model, train_dataloader, val_dataloader)
     trainer.test(model, test_dataloaders=test_dataloader)
